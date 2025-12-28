@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "JobDiggerrr - Find Hidden Tech Jobs",
   description: "Discover remote tech jobs from hidden sources. ATS Resume Optimizer & AI Cover Letter Generator.",
+  icons: {
+    icon: "https://res.cloudinary.com/cnq-first/image/upload/v1699104437/Abdul_dekwwr.jpg",
+  },
 };
 
 export default function RootLayout({
