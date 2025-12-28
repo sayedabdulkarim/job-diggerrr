@@ -5,14 +5,17 @@ import { extractText } from 'unpdf';
 import { authOptions } from '@/lib/auth/auth-options';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
-// Use OpenRouter if available, fallback to OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENROUTER_API_KEY
-    ? 'https://openrouter.ai/api/v1'
-    : 'https://api.openai.com/v1',
-});
+// Initialize OpenAI client lazily
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || '',
+    baseURL: process.env.OPENROUTER_API_KEY
+      ? 'https://openrouter.ai/api/v1'
+      : 'https://api.openai.com/v1',
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -95,6 +98,7 @@ Create an ATS-optimized version following these rules:
 
 Respond with ONLY valid JSON, no markdown code blocks.`;
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: process.env.OPENROUTER_MODEL || process.env.OPENAI_MODEL || 'google/gemini-2.0-flash-001',
       messages: [{ role: 'user', content: prompt }],

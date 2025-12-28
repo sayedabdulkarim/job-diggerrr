@@ -4,13 +4,16 @@ import OpenAI from 'openai';
 import { authOptions } from '@/lib/auth/auth-options';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENROUTER_API_KEY
-    ? 'https://openrouter.ai/api/v1'
-    : 'https://api.openai.com/v1',
-});
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || '',
+    baseURL: process.env.OPENROUTER_API_KEY
+      ? 'https://openrouter.ai/api/v1'
+      : 'https://api.openai.com/v1',
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,6 +53,7 @@ Apply the user's requested changes to the resume. Keep the ATS-friendly format i
 
 Respond with ONLY the updated resume text, no explanations or commentary.`;
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: process.env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-001',
       messages: [{ role: 'user', content: prompt }],
