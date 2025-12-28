@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/header';
-import { FileSearch, FileText, FileOutput, Lock, Sparkles } from 'lucide-react';
+import { FileSearch, FileText, FileOutput, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 const tools = [
@@ -36,21 +36,23 @@ const tools = [
 ];
 
 export default function AIToolsPage() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('jobdiggerrr_theme');
+      if (saved === 'dark') return true;
+      if (saved === 'light') return false;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem('jobdiggerrr_theme');
-    if (saved === 'dark') {
-      setDarkMode(true);
+    if (darkMode) {
       document.documentElement.classList.add('dark');
-    } else if (saved === 'light') {
-      setDarkMode(false);
+    } else {
       document.documentElement.classList.remove('dark');
-    } else if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDarkMode(true);
-      document.documentElement.classList.add('dark');
     }
-  }, []);
+  }, [darkMode]);
 
   const toggleDarkMode = () => {
     setDarkMode((prev) => {

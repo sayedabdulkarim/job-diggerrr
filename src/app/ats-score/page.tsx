@@ -248,7 +248,7 @@ export default function ATSScorePage() {
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <h3 className="flex items-center gap-2 text-lg font-semibold text-green-600 dark:text-green-400 mb-4">
                   <CheckCircle className="w-5 h-5" />
-                  What's Good
+                  What&apos;s Good
                 </h3>
                 <ul className="space-y-2">
                   {result.good.map((item, i) => (
